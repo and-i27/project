@@ -2,7 +2,7 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #04376e;
 }
 
 @theme inline {
@@ -10,11 +10,12 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-primary: #f6861f;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #04376e;
     --foreground: #ededed;
   }
 }
@@ -23,4 +24,26 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .header {
+    @apply shadow-xl p-3 bg-auto fixed top-0 w-full z-10;
+  }
+
+  .main {
+    @apply flex flex-col space-y-5 mb-auto mt-40 pb-5 px-[4%] sm:px-[10%];
+  }
+
+  .footer {
+    @apply bg-auto text-center text-sm py-4;
+  }
+
+  .btn {
+    @apply bg-primary rounded-md p-3 hover:opacity-75 hover:cursor-pointer;
+  }
+
+  .logo-text {
+    @apply ml-3 hidden sm:inline text-xl font-bold text-primary;
+  }
 }
