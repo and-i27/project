@@ -59,7 +59,7 @@ body {
   }
 
   .text-input {
-    @apply bg-background rounded-md p-1;
+    @apply bg-background text-secondary rounded-md p-1;
   }
 
   .submit-btn {
