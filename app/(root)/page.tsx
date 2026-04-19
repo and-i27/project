@@ -92,17 +92,16 @@ export default async function Home() {
               <Link
                 key={vehicle._id}
                 href={`/vehicle/${vehicle._id}`}
-                className="rounded-lg border bg-white p-4 shadow-sm transition hover:shadow-md"
+                className="rounded-lg bg-secondary text-primary p-4 shadow transition hover:shadow-xl"
               >
                 <div
-                  className="mb-4 h-32 w-full rounded-md border border-dashed bg-gray-50 bg-cover bg-center"
+                  className="mb-4 h-32 w-full rounded-md bg-cover bg-center"
                   style={vehicle.imageUrl ? { backgroundImage: `url(${vehicle.imageUrl})` } : undefined}
                 />
-                <div className="text-base font-semibold">{title}</div>
+                <div className="font-semibold">{title}</div>
                 <div className="mt-2 text-sm">
-                  {vehicle.year ? `${vehicle.year} - ` : ""}
-                  {vehicle.plate ?? "No plate"}
-                  {vehicle.notes ? ` - ${vehicle.notes}` : ""}
+                  {vehicle.year ? `Letnik ${vehicle.year} - ` : ""}
+                  {vehicle.plate ? `Registrska oznaka: ${vehicle.plate}` : "Brez registrske oznake"}
                 </div>
               </Link>
             );
