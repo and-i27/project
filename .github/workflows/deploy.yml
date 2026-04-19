@@ -1,0 +1,56 @@
+name: Auto Deploy to Apache Server
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
+          port: 2200
+          script: |
+            cd /var/www/domendolar/MojServis
+
+            echo "🔧 Loading NVM..."
+            export NVM_DIR="$HOME/.nvm"
+            source "$NVM_DIR/nvm.sh"
+            source "$NVM_DIR/bash_completion" || true
+
+            echo "Node version: $(node -v)"
+            echo "NPM version: $(npm -v)"
+            echo "PM2 version: $(pm2 -v)"
+
+            echo "🔁 Pulling latest code..."
+            git fetch --all
+            git reset --hard origin/master
+
+            echo "🧹 Cleaning old build..."
+            rm -rf .next
+
+            echo "📦 Installing dependencies..."
+            npm install
+            npm ci
+
+            echo "⚙️ Rebuilding Next.js app..."
+            npm run build
+
+            echo "🚀 Restarting PM2 process..."
+            PORT=3003 pm2 reload mojservis || pm2 start npm --name "mojservis" -- start
+            pm2 save
+
+            echo "✅ Deployment completed successfully!"
