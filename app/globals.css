@@ -22,7 +22,7 @@ body {
 }
 
 h1 {
-  @apply text-center text-xl;
+  @apply text-center text-2xl;
 }
 
 @layer utilities {
