@@ -74,11 +74,14 @@ export default async function Home() {
   return (
     <section className="main">
       <h1>Dobrodošli nazaj, {session.user.name}!</h1>
-      <p>Hiter pregled vaših vozil in nedavnih dejavnosti</p>
+      <p className="text-lg">Hiter pregled vaših vozil in nedavnih dejavnosti</p>
 
       {cars.length === 0 ? (
-        <div className="rounded-lg border bg-white p-6 text-sm shadow-xl">
-          Nimate še vozil. Dodajte svoje prvo vozilo, da začnete spremljati storitve in stroške.
+        <div className="sm:flex sm:items-center sm:justify-between sm:space-y-0 space-y-3 rounded-lg bg-secondary p-6 text-primary text-sm shadow-xl">
+          <p className="w-fit">Nimate še vozil. Dodajte svoje prvo vozilo, da začnete spremljati storitve in stroške.</p>
+          <Link href="/vehicle/create" className="w-full sm:w-auto">
+            <button className="btn w-full">Dodaj vozilo</button>
+          </Link>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -108,8 +111,8 @@ export default async function Home() {
       )}
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
-        <div className="rounded-lg border bg-white p-5 shadow-xl">
-          <div className="text-sm font-semibold">Prihajajoča opravila</div>
+        <div className="rounded-lg bg-secondary text-primary p-5 shadow-xl">
+          <div className="font-semibold">Prihajajoča opravila</div>
           <div className="mt-4 grid gap-3 text-sm">
             {todos.length === 0 ? (
               <div>Nimate odprtega opravila.</div>
@@ -131,8 +134,8 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="rounded-lg border bg-white p-5 shadow-xl">
-          <div className="text-sm font-semibold">Zadnji servisi</div>
+        <div className="rounded-lg bg-secondary text-primary p-5 shadow-xl">
+          <div className="font-semibold">Zadnji servisi</div>
           <div className="mt-4 grid gap-3 text-sm">
             {services.length === 0 ? (
               <div>Nimate še zabeleženih servisov.</div>
@@ -159,7 +162,7 @@ export default async function Home() {
         </div>
       </div>
 
-      <div className="rounded-lg border bg-white p-5 text-sm shadow-xl">
+      <div className="rounded-lg bg-secondary text-primary p-5 text-sm shadow-xl">
         {cars.length} vozil, {todos.length} odprtih opravil in {services.length} nedavnih vnosov servisa.
       </div>
     </section>
