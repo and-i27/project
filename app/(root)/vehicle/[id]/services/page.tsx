@@ -2,12 +2,15 @@ import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { requireUser } from "@/lib/requireUser";
 import AddVehicleServiceForm from "@/app/components/AddVehicleServiceForm";
+import { serviceTypeLabel } from "@/lib/serviceImport";
 
 type VehicleServicesPageData = {
   _id: string;
   name: string;
+  odometer?: number;
   services: {
     _id: string;
+    serviceType?: string;
     title: string;
     description?: string;
     date: string;
@@ -29,8 +32,10 @@ export default async function VehicleServicesPage({
     `*[_type == "car" && _id == $id && owner._ref == $userId][0]{
       _id,
       name,
+      odometer,
       "services": *[_type == "serviceRecord" && car._ref == $id && user._ref == $userId] | order(date desc){
         _id,
+        serviceType,
         title,
         description,
         date,
@@ -59,12 +64,20 @@ export default async function VehicleServicesPage({
             Spremljajte zgodovino servisov in stroške za {vehicle.name}.
           </p>
         </div>
-        <Link
-          href={`/vehicle/${id}`}
-          className="btn text-center w-full sm:w-auto"
-        >
-          Nazaj na vozilo
-        </Link>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/import/services" className="button w-auto">
+            <button className="btn min-w-30">Uvozi servis</button>
+          </Link>
+          <Link
+            href={`/api/vehicle/${id}/services/pdf`}
+            className="button w-auto"
+          >
+            <button className="btn min-w-30">Izvozi PDF</button>
+          </Link>
+          <Link href={`/vehicle/${id}`} className="button w-auto">
+            <button className="btn min-w-30">Nazaj na vozilo</button>
+          </Link>
+        </div>
       </div>
 
       <div className="border-b"></div>

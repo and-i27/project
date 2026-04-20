@@ -5,10 +5,12 @@ import { createVehicleService } from "@/app/(root)/vehicle/[id]/services/action"
 
 type AddVehicleServiceFormProps = {
   carId: string;
+  currentOdometer?: number;
 };
 
 export default function AddVehicleServiceForm({
   carId,
+  currentOdometer,
 }: AddVehicleServiceFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -73,12 +75,13 @@ export default function AddVehicleServiceForm({
         </div>
 
         <div className="flex flex-col gap-2">
-          <label htmlFor="odometer">Prevoženi km</label>
+          <label htmlFor="odometer">Odometer (km)</label>
           <input
             id="odometer"
             name="odometer"
             type="number"
-            className="text-input"
+            className="authInput"
+            defaultValue={currentOdometer ?? undefined}
           />
         </div>
 

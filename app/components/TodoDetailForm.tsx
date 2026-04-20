@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { completeTodo, deleteTodo, updateTodo } from "@/app/(root)/todo/[id]/action";
+import { reminderOffsetLabel } from "@/lib/todoReminder";
 
 type TodoDetailFormProps = {
   todo: {
@@ -11,6 +12,8 @@ type TodoDetailFormProps = {
     dueDate: string;
     priority: string;
     status: string;
+    reminderEnabled?: boolean;
+    reminderOffset?: string;
   };
 };
 
@@ -19,6 +22,7 @@ export default function TodoDetailForm({ todo }: TodoDetailFormProps) {
   const [saving, setSaving] = useState(false);
   const [completing, setCompleting] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [reminderEnabled, setReminderEnabled] = useState(Boolean(todo.reminderEnabled));
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -119,6 +123,44 @@ export default function TodoDetailForm({ todo }: TodoDetailFormProps) {
             <option value="high">High</option>
           </select>
         </div>
+
+        <div className="flex flex-col gap-2 sm:col-span-2">
+          <label htmlFor="status">Status</label>
+          <select id="status" name="status" className="authInput" defaultValue={todo.status}>
+            <option value="open">Open</option>
+            <option value="done">Done</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+        </div>
+
+        <div className="flex items-center gap-3 sm:col-span-2">
+          <input
+            id="reminderEnabled"
+            name="reminderEnabled"
+            type="checkbox"
+            checked={reminderEnabled}
+            onChange={(e) => setReminderEnabled(e.target.checked)}
+          />
+          <label htmlFor="reminderEnabled">Enable e-mail reminder</label>
+        </div>
+
+        {reminderEnabled && (
+          <div className="flex flex-col gap-2 sm:col-span-2">
+            <label htmlFor="reminderOffset">Reminder timing</label>
+            <select
+              id="reminderOffset"
+              name="reminderOffset"
+              className="authInput"
+              defaultValue={todo.reminderOffset ?? "1week"}
+            >
+              {Object.entries(reminderOffsetLabel).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         <div className="flex flex-col gap-2 sm:col-span-2">
           <label htmlFor="description">Description</label>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { requireUser } from "@/lib/requireUser";
+import { reminderOffsetLabel } from "@/lib/todoReminder";
 
 type TodoListItem = {
   _id: string;
@@ -9,6 +10,8 @@ type TodoListItem = {
   dueDate: string;
   status: string;
   priority: string;
+  reminderEnabled?: boolean;
+  reminderOffset?: string;
   carName?: string;
   carId?: string;
 };
@@ -16,7 +19,7 @@ type TodoListItem = {
 const statusLabel: Record<string, string> = {
   open: "Status: open",
   done: "Status: done",
-  cancelled: "Status: canceleed",
+  cancelled: "Status: cancelled",
 };
 
 const priorityLabel: Record<string, string> = {
@@ -42,6 +45,8 @@ export default async function TodoPage() {
       dueDate,
       status,
       priority,
+      reminderEnabled,
+      reminderOffset,
       "carName": car->name,
       "carId": car->_id
     }`,
@@ -85,6 +90,11 @@ export default async function TodoPage() {
                 <div className="mt-2 text-sm text-[color:var(--muted)]">
                   Due {new Date(todo.dueDate).toLocaleString("sl-SI")}
                 </div>
+                {todo.reminderEnabled && (
+                  <div className="mt-1 text-sm text-[color:var(--muted)]">
+                    {reminderOffsetLabel[todo.reminderOffset ?? "1week"] ?? "Email reminder active"}
+                  </div>
+                )}
                 {todo.description && (
                   <p className="mt-2 text-sm text-[color:var(--muted)]">{todo.description}</p>
                 )}
