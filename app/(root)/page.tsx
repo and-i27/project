@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { client } from "@/sanity/lib/client";
 import { requireUser } from "@/lib/requireUser";
+import ServiceCostSummary from "@/app/components/ServiceCostSummary";
 
 type CarListItem = {
   _id: string;
@@ -134,30 +135,14 @@ export default async function Home() {
         </div>
 
         <div className="rounded-lg bg-secondary text-primary p-5 shadow-xl">
-          <div className="font-semibold">Zadnji servisi</div>
-          <div className="mt-4 grid gap-3 text-sm">
-            {services.length === 0 ? (
-              <div>Nimate še zabeleženih servisov.</div>
-            ) : (
-              services.map((service) => (
-                <div key={service._id} className="flex items-center justify-between gap-3">
-                  <div>
-                    <div>{service.title}</div>
-                    {service.carId && (
-                      <Link href={`/vehicle/${service.carId}/services`} className="text-xs hover:text-black">
-                        {service.carName ?? "Vehicle"}
-                      </Link>
-                    )}
-                  </div>
-                  <span className="text-black">
-                    {typeof service.cost === "number"
-                      ? `${service.cost.toFixed(2)} ${service.currency ?? "EUR"}`
-                      : new Date(service.date).toLocaleDateString("sl-SI")}
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
+          <ServiceCostSummary
+            services={services}
+            cars={cars.map((car) => ({
+            _id: car._id,
+            name: car.name,
+            makeModel: car.makeModel,
+            }))}
+            />
         </div>
       </div>
 

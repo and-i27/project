@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { client } from "@/sanity/lib/client";
 import { requireUser } from "@/lib/requireUser";
 import TodoDetailForm from "@/app/components/TodoDetailForm";
+import { reminderOffsetLabel } from "@/lib/todoReminder";
 
 type TodoDetailPageData = {
   _id: string;
@@ -11,6 +12,8 @@ type TodoDetailPageData = {
   dueDate: string;
   priority: string;
   status: string;
+  reminderEnabled?: boolean;
+  reminderOffset?: string;
   carName?: string;
   carId?: string;
 };
@@ -31,6 +34,8 @@ export default async function TodoDetailPage({
       dueDate,
       priority,
       status,
+      reminderEnabled,
+      reminderOffset,
       "carName": car->name,
       "carId": car->_id
     }`,
@@ -52,6 +57,9 @@ export default async function TodoDetailPage({
                 Back to {todo.carName ?? "vehicle"} tasks
               </Link>
             )}
+            <div className="mt-2 text-sm text-[color:var(--muted)]">
+              Reminder: {todo.reminderEnabled ? reminderOffsetLabel[todo.reminderOffset ?? "1week"] ?? todo.reminderOffset : "Disabled"}
+            </div>
           </div>
           <Link href="/todo" className="button w-auto">
             All to-dos
