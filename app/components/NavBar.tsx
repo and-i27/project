@@ -1,9 +1,11 @@
  import { auth, signOut } from "@/auth";
 import Image from "next/image";
 import Link from "next/link";
+import { getUserRole } from "@/lib/requireUser";
 
 const Navbar = async () => {
      const session = await auth();
+     const userRole = session?.user?.id ? await getUserRole(session.user.id) : null;
 
   return (
     <header className="header">
@@ -22,6 +24,11 @@ const Navbar = async () => {
             <Link href="/todo">
               <button className="btn min-w-30">Opravila</button>
             </Link>
+            {userRole === "admin" && (
+              <Link href="/admin">
+                <button className="btn min-w-30 bg-red-600 hover:bg-red-700">Admin Panel</button>
+              </Link>
+            )}
             <Link href="/profile">
               <button className="btn min-w-30">Moj Profil</button>
             </Link>

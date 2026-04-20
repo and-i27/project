@@ -10,7 +10,12 @@ type TodoMutationResult = {
   redirectTo?: string;
 };
 
-async function getOwnedTodo(id: string, userId: string) {
+type OwnedTodo = {
+  _id: string;
+  carId?: string;
+};
+
+async function getOwnedTodo(id: string, userId: string): Promise<OwnedTodo | null> {
   return writeClient.fetch(
     `*[_type == "todo" && _id == $id && user._ref == $userId][0]{
       _id,
@@ -48,6 +53,8 @@ export async function updateTodo(
     const dueDate = String(formData.get("dueDate") || "").trim();
     const priority = String(formData.get("priority") || "medium").trim() || "medium";
     const status = String(formData.get("status") || "open").trim() || "open";
+    const reminderEnabled = formData.get("reminderEnabled") === "on";
+    const reminderOffset = String(formData.get("reminderOffset") || "1week").trim() || "1week";
 
     if (!title) {
       return { success: false, error: "Title is required." };
@@ -57,16 +64,23 @@ export async function updateTodo(
       return { success: false, error: "Due date is required." };
     }
 
-    await writeClient
-      .patch(id)
-      .set({
-        title,
-        description: description || undefined,
-        dueDate,
-        priority,
-        status,
-      })
-      .commit();
+    let patch = writeClient.patch(id).set({
+      title,
+      description: description || undefined,
+      dueDate,
+      priority,
+      status,
+      reminderEnabled,
+      reminderOffset: reminderEnabled ? reminderOffset : undefined,
+    });
+
+    patch = patch.unset(["reminderLastSentAt"]);
+
+    if (!reminderEnabled) {
+      patch = patch.unset(["reminderOffset"]);
+    }
+
+    await patch.commit();
 
     revalidateTodoPaths(id, todo.carId);
 
