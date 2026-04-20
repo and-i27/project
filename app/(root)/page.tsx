@@ -154,37 +154,15 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="section-primary p-5!">
-          <div className="font-semibold">Zadnji servisi</div>
-          <div className="mt-4 grid gap-3 text-sm">
-            {services.length === 0 ? (
-              <div>Nimate še zabeleženih servisov.</div>
-            ) : (
-              services.map((service) => (
-                <div
-                  key={service._id}
-                  className="flex items-center justify-between gap-3"
-                >
-                  <div>
-                    <div>{service.title}</div>
-                    {service.carId && (
-                      <Link
-                        href={`/vehicle/${service.carId}/services`}
-                        className="hover:text-primary/80"
-                      >
-                        {service.carName ?? "Vozilo"}
-                      </Link>
-                    )}
-                  </div>
-                  <span className="text-primary">
-                    {typeof service.cost === "number"
-                      ? `${service.cost.toFixed(2)} ${service.currency ?? "EUR"}`
-                      : new Date(service.date).toLocaleDateString("sl-SI")}
-                  </span>
-                </div>
-              ))
-            )}
-          </div>
+        <div className="rounded-lg bg-secondary text-primary p-5 shadow-xl">
+          <ServiceCostSummary
+            services={services}
+            cars={cars.map((car) => ({
+            _id: car._id,
+            name: car.name,
+            makeModel: car.makeModel,
+            }))}
+            />
         </div>
       </div>
 
