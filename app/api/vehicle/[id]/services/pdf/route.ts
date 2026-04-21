@@ -101,19 +101,19 @@ export async function GET(
     y -= lineHeight;
   };
 
-  drawText("CarLog Service History Export", 18, true);
-  drawText(`Vehicle: ${vehicle.name}`, 12, true);
-  drawText(`Make / Model: ${vehicle.makeModel || "-"}`);
-  drawText(`Plate: ${vehicle.plate || "-"}`);
+  drawText("MojSevirs Service zgodovinski izvoz", 18, true);
+  drawText(`Vozilo: ${vehicle.name}`, 12, true);
+  drawText(`Znamka / Model: ${vehicle.makeModel || "-"}`);
+  drawText(`Reg. oznaka: ${vehicle.plate || "-"}`);
   drawText(`VIN: ${vehicle.vin || "-"}`);
-  drawText(`Current odometer: ${typeof vehicle.odometer === "number" ? `${vehicle.odometer.toLocaleString("sl-SI")} km` : "-"}`);
-  drawText(`Generated: ${new Date().toLocaleString("sl-SI")}`);
+  drawText(`Trenutni prevoženi km: ${typeof vehicle.odometer === "number" ? `${vehicle.odometer.toLocaleString("sl-SI")} km` : "-"}`);
+  drawText(`Ustvarjeno: ${new Date().toLocaleString("sl-SI")}`);
   y -= 8;
 
   const totals = new Map<string, number>();
 
   if (vehicle.services.length === 0) {
-    drawText("No service records found for this vehicle.");
+    drawText("Ni storitev najdenih za to vozilo.");
   } else {
     for (const service of vehicle.services) {
       if (typeof service.cost === "number") {
@@ -122,19 +122,19 @@ export async function GET(
       }
 
       drawText(service.title, 12, true);
-      drawText(`Date: ${new Date(service.date).toLocaleString("sl-SI")}`);
-      drawText(`Type: ${serviceTypeLabel[service.serviceType ?? "regular"] ?? service.serviceType ?? "-"}`);
-      drawText(`Odometer: ${typeof service.odometer === "number" ? `${service.odometer.toLocaleString("sl-SI")} km` : "-"}`);
-      drawText(`Cost: ${formatCurrency(service.cost, service.currency)}`);
+      drawText(`Datum: ${new Date(service.date).toLocaleString("sl-SI")}`);
+      drawText(`Vrsta: ${serviceTypeLabel[service.serviceType ?? "regular"] ?? service.serviceType ?? "-"}`);
+      drawText(`Trenutni prevoženi km: ${typeof service.odometer === "number" ? `${service.odometer.toLocaleString("sl-SI")} km` : "-"}`);
+      drawText(`Stroski: ${formatCurrency(service.cost, service.currency)}`);
       if (service.description) {
-        drawText(`Description: ${service.description}`);
+        drawText(`Opis: ${service.description}`);
       }
       y -= 8;
     }
 
     if (totals.size > 0) {
       for (const [currency, amount] of totals.entries()) {
-        drawText(`Total service cost (${currency}): ${amount.toFixed(2)} ${currency}`, 12, true);
+        drawText(`Skupni stroški servisa (${currency}): ${amount.toFixed(2)} ${currency}`, 12, true);
       }
     }
   }
