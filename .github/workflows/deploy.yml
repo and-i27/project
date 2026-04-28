@@ -50,7 +50,7 @@ jobs:
             npm run build
 
             echo "🚀 Restarting PM2 process..."
-            PORT=3003 pm2 reload mojservis || pm2 start npm --name "mojservis" -- start
+            PORT=3003 pm2 reload mojservis || pm2 start npm --name "mojservis" -- start -- -H 0.0.0.0
             pm2 save
 
             echo "✅ Deployment completed successfully!"
